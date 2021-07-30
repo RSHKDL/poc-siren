@@ -8,3 +8,13 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> PHPStorm ###
+.idea/
+###< PHPStorm ###
+
+###> Docker ###
+docker-env
+docker-compose.yml
+docker/nginx/log
+###< Docker ###

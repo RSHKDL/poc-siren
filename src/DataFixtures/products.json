@@ -1,22 +1,22 @@
 [
   {
-    "name": "product flash sale 1",
-    "type": "flash_sale",
-    "specialOfferStart": "2021-08-01",
+    "name": "product 1",
+    "type": null,
+    "specialOfferStart": null,
     "price": 49999,
     "stock": 10
   },
   {
-    "name": "product flash sale 2",
-    "type": "flash_sale",
-    "specialOfferStart": "2021-07-30",
+    "name": "product 2",
+    "type": null,
+    "specialOfferStart": null,
     "price": 38000,
     "stock": 10
   },
   {
-    "name": "product flash sale 3",
-    "type": "flash_sale",
-    "specialOfferStart": "2021-07-30",
+    "name": "product 3",
+    "type": null,
+    "specialOfferStart": null,
     "price": 354979,
     "stock": 10
   },
@@ -42,6 +42,27 @@
     "stock": 10
   },
   {
+    "name": "product flash sale 1",
+    "type": "flash_sales",
+    "specialOfferStart": "2021-08-01",
+    "price": 49999,
+    "stock": 10
+  },
+  {
+    "name": "product flash sale 2",
+    "type": "flash_sales",
+    "specialOfferStart": "2021-07-30",
+    "price": 38000,
+    "stock": 10
+  },
+  {
+    "name": "product flash sale 3",
+    "type": "flash_sales",
+    "specialOfferStart": "2021-07-30",
+    "price": 354979,
+    "stock": 10
+  },
+  {
     "name": "product special offer 1",
     "type": "special_offer",
     "specialOfferStart": null,
@@ -58,27 +79,6 @@
   {
     "name": "product special offer 3",
     "type": "special_offer",
-    "specialOfferStart": null,
-    "price": 354979,
-    "stock": 10
-  },
-  {
-    "name": "product 1",
-    "type": null,
-    "specialOfferStart": null,
-    "price": 49999,
-    "stock": 10
-  },
-  {
-    "name": "product 2",
-    "type": null,
-    "specialOfferStart": null,
-    "price": 38000,
-    "stock": 10
-  },
-  {
-    "name": "product 3",
-    "type": null,
     "specialOfferStart": null,
     "price": 354979,
     "stock": 10

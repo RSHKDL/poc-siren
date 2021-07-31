@@ -37,6 +37,11 @@ class Product
      */
     private SpecialOffer $specialOffer;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private ?int $weighting;
+
     public function __construct(string $name, int $price, int $stock)
     {
         $this->name = $name;
@@ -94,6 +99,18 @@ class Product
     public function setSpecialOffer(SpecialOffer $specialOffer): self
     {
         $this->specialOffer = $specialOffer;
+
+        return $this;
+    }
+
+    public function getWeighting(): ?int
+    {
+        return $this->weighting;
+    }
+
+    public function setWeighting(?int $weighting): self
+    {
+        $this->weighting = $weighting;
 
         return $this;
     }

@@ -24,6 +24,7 @@ class ProductFixtures extends Fixture
                 $specialOffer->setStartDate($date);
                 $product->setSpecialOffer($specialOffer);
             }
+            $this->setDefaultWeighting($product);
             $manager->persist($product);
         }
 
@@ -33,5 +34,28 @@ class ProductFixtures extends Fixture
     private function loadData(string $fileName): array
     {
         return json_decode(file_get_contents(__DIR__.'/'.$fileName.'.json'), true);
+    }
+
+    private function setDefaultWeighting(Product $product): void
+    {
+        switch ($product) {
+            case SpecialOffer::FLASH_SALES === $product->getSpecialOffer()->getType()
+                && $product->getStock() > 0:
+                $product->setWeighting(300);
+                break;
+            case SpecialOffer::SALES === $product->getSpecialOffer()->getType()
+                && $product->getStock() > 0:
+                $product->setWeighting(200);
+                break;
+            case SpecialOffer::SPECIAL_OFFER === $product->getSpecialOffer()->getType()
+                && $product->getStock() > 0:
+                $product->setWeighting(100);
+                break;
+            case 0 === $product->getStock():
+                $product->setWeighting(0);
+                break;
+            default:
+                $product->setWeighting(1);
+        }
     }
 }

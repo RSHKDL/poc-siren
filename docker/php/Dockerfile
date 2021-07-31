@@ -15,8 +15,8 @@ RUN apk add --update \
 # Install PHP extensions
 RUN docker-php-ext-install mysqli pdo pdo_mysql
 
-# Get latest composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Get composer from https://hub.docker.com/_/composer/
+COPY --from=composer:2.1.5 /usr/bin/composer /usr/bin/composer
 
 # Create system user to run Composer
 RUN addgroup -g $uid $user && \

@@ -33,15 +33,16 @@ class Product
     private int $stock;
 
     /**
-     * @ORM\OneToOne(targetEntity=SpecialOffer::class, inversedBy="product", cascade={"persist", "remove"})
+     * @ORM\Embedded(class="SpecialOffer")
      */
-    private ?SpecialOffer $specialOffer = null;
+    private SpecialOffer $specialOffer;
 
     public function __construct(string $name, int $price, int $stock)
     {
         $this->name = $name;
         $this->price = $price;
         $this->stock = $stock;
+        $this->specialOffer = new SpecialOffer(null);
     }
 
     public function getId(): ?int
@@ -85,12 +86,12 @@ class Product
         return $this;
     }
 
-    public function getSpecialOffer(): ?SpecialOffer
+    public function getSpecialOffer(): SpecialOffer
     {
         return $this->specialOffer;
     }
 
-    public function setSpecialOffer(?SpecialOffer $specialOffer): self
+    public function setSpecialOffer(SpecialOffer $specialOffer): self
     {
         $this->specialOffer = $specialOffer;
 

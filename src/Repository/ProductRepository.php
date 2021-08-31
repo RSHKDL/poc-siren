@@ -30,8 +30,19 @@ class ProductRepository extends ServiceEntityRepository
      */
     public function getWeightedProductList(): array
     {
-        //@todo return weighted list
-        return [];
+        $result1 = $this->createQueryBuilder('p')
+            ->where('p.stock > 0')
+            ->orderBy('p.weighting', 'DESC')
+            ->addOrderBy('p.specialOffer.startDate', 'DESC')
+            ->addOrderBy('p.price', 'ASC')
+            ->getQuery()->getResult();
+
+        $result2 = $this->createQueryBuilder('p')
+            ->where('p.stock = 0')
+            ->orderBy('p.price', 'DESC')
+            ->getQuery()->getResult();
+
+        return array_merge($result1, $result2);
     }
 
     // /**

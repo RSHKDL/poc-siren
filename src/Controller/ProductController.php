@@ -18,10 +18,11 @@ class ProductController extends AbstractController
     public function index(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findAll();
+        $weightedProducts = $productRepository->getWeightedProductList();
 
         return $this->render('product/index.html.twig', [
-            'controller_name' => 'ProductController',
-            'products' => $products
+            'products' => $products,
+            'weighted_products' => $weightedProducts
         ]);
     }
 }

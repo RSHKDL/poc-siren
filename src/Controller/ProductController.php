@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,6 +24,16 @@ class ProductController extends AbstractController
         return $this->render('product/index.html.twig', [
             'products' => $products,
             'weighted_products' => $weightedProducts
+        ]);
+    }
+
+    /**
+     * @Route("/add", name="product_add")
+     */
+    public function add(Request $request): Response
+    {
+
+        return $this->render('product/add.html.twig', [
         ]);
     }
 }

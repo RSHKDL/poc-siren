@@ -9,6 +9,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class ProductFixtures extends Fixture
 {
+    use DataFixturesTrait;
+
     public function load(ObjectManager $manager)
     {
         $productsData = $this->loadData("products");
@@ -29,11 +31,6 @@ class ProductFixtures extends Fixture
         }
 
         $manager->flush();
-    }
-
-    private function loadData(string $fileName): array
-    {
-        return json_decode(file_get_contents(__DIR__.'/'.$fileName.'.json'), true);
     }
 
     private function setDefaultWeighting(Product $product): void

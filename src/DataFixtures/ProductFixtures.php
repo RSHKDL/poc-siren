@@ -15,11 +15,10 @@ class ProductFixtures extends Fixture
     {
         $productsData = $this->loadData("products");
         foreach ($productsData as $productData) {
-            $product = new Product(
-                $productData["name"],
-                $productData["price"],
-                $productData["stock"]
-            );
+            $product = new Product();
+            $product->setName($productData["name"]);
+            $product->setPrice($productData["price"]);
+            $product->setStock($productData["stock"]);
             if ($productData["type"] !== null) {
                 $specialOffer = new SpecialOffer($productData["type"]);
                 $date = null !== $productData["specialOfferStart"] ? new \DateTime($productData["specialOfferStart"]) : null;

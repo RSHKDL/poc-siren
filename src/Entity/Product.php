@@ -13,6 +13,8 @@ use Symfony\Component\Uid\Uuid;
  */
 class Product
 {
+    public const DEFAULT_WEIGHTING = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -48,19 +50,16 @@ class Product
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private ?int $weighting;
+    private ?int $weighting = self::DEFAULT_WEIGHTING;
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class, inversedBy="products")
      */
     private Collection $categories;
 
-    public function __construct(string $name, int $price, int $stock)
+    public function __construct()
     {
         $this->uuid = Uuid::v4();
-        $this->name = $name;
-        $this->price = $price;
-        $this->stock = $stock;
         $this->specialOffer = new SpecialOffer(null);
         $this->categories = new ArrayCollection();
     }
@@ -87,12 +86,12 @@ class Product
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?int
     {
         return $this->price;
     }
 
-    public function setPrice(float $price): self
+    public function setPrice(int $price): self
     {
         $this->price = $price;
 

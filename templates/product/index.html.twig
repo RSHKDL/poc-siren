@@ -3,6 +3,9 @@
 {% block title %}Product list{% endblock %}
 
 {% block body %}
+    <div>
+        <a href="{{ path('product_add') }}">Create new</a>
+    </div>
     <table>
         <caption>Basic products list</caption>
         <thead>
@@ -12,6 +15,7 @@
                 <th>Quantity</th>
                 <th>Special Offer</th>
                 <th>Weighting</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +35,9 @@
                     {% endif %}
                 </td>
                 <td>{{ product.weighting }}</td>
+                <td>
+                    <a href="{{ path('product_edit', {uuid: product.uuid}) }}">edit</a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

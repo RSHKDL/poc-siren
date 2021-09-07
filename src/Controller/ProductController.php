@@ -14,13 +14,20 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProductController extends AbstractController
 {
+    private ProductRepository $productRepository;
+
+    public function __construct(ProductRepository $productRepository)
+    {
+        $this->productRepository = $productRepository;
+    }
+
     /**
      * @Route("/", name="product_list")
      */
-    public function index(ProductRepository $productRepository): Response
+    public function index(): Response
     {
-        $products = $productRepository->findAll();
-        $weightedProducts = $productRepository->getWeightedProductList();
+        $products = $this->productRepository->findAll();
+        $weightedProducts = $this->productRepository->getWeightedProductList();
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
@@ -31,7 +38,7 @@ class ProductController extends AbstractController
     /**
      * @Route("/add", name="product_add")
      */
-    public function add(Request $request, ProductRepository $productRepository): Response
+    public function add(Request $request): Response
     {
         $form = $this->createForm(ProductType::class);
         $form->handleRequest($request);
@@ -40,7 +47,7 @@ class ProductController extends AbstractController
             $product = $form->getData();
 
             try {
-                $productRepository->save($product, true);
+                $this->productRepository->save($product, true);
                 $this->addFlash("success", "Yeah!");
 
                 return $this->redirectToRoute("product_list");
@@ -53,6 +60,37 @@ class ProductController extends AbstractController
 
         return $this->render('product/add.html.twig', [
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/edit/{uuid}", name="product_edit")
+     */
+    public function edit(Request $request, string $uuid): Response
+    {
+        $product = $this->productRepository->findOneBy(['uuid' => $uuid]);
+
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $product = $form->getData();
+
+            try {
+                $this->productRepository->save($product, true);
+                $this->addFlash("success", "Yeah!");
+
+                return $this->redirectToRoute("product_list");
+            } catch (\Throwable $throwable) {
+                $message = $throwable->getMessage();
+                $this->addFlash("error", "Boo! Message: $message");
+            }
+
+        }
+
+        return $this->render('product/edit.html.twig', [
+            'form' => $form->createView(),
+            'product' => $product
         ]);
     }
 }

@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    data_csv_path: '%kernel.project_dir%/data/siren_delta.csv'
 
 services:
     # default configuration for services in *this* file
@@ -23,3 +24,10 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\Siren\Application\Query\FindCompanyQueryHandler:
+        arguments:
+            $path: '%data_csv_path%'
+
+    App\Siren\Domain\Services\GetCompanyInfoFromCsv:
+        arguments:
+            $csvFile: '%data_csv_path%'

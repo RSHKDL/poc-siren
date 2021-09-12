@@ -12,7 +12,7 @@
 - Symfony 5.3
 - Nginx
 
-## Projet Setup
+## Project Setup
 
 1. Clone the repository
 
@@ -37,3 +37,11 @@
 5. Go to localhost:<port_defined_in_docker_compose>/
 
     Example: http://localhost:8000/
+
+## Project Usage
+
+Get your csv data from 
+[insee website](https://www.data.gouv.fr/fr/datasets/base-sirene-des-entreprises-et-de-leurs-etablissements-siren-siret/)
+and put it in the `/data` directory at the root of the project.
+
+Then go to `http://localhost:8000/api/siren/{siren-number-to-search}`

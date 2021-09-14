@@ -4,39 +4,52 @@ namespace App\Siren\Domain\Model;
 
 class Company
 {
-    private int $siren;
-    private int $nic;
-    private string $name;
+    private string $siren;
+    private string $nic;
+    private string $siret;
+    private ?string $name;
     private ?string $brand;
     private ?string $category;
     private CompanyAddress $address;
 
-    public function getSiren(): int
+    public function __construct(string $siren, string $nic)
+    {
+        $this->siren = $siren;
+        $this->nic = $nic;
+        $this->siret = $siren . $nic;
+    }
+
+    public function getSiren(): string
     {
         return $this->siren;
     }
 
-    public function setSiren(int $siren): void
+    public function setSiren(string $siren): void
     {
         $this->siren = $siren;
     }
 
-    public function getNic(): int
+    public function getNic(): string
     {
         return $this->nic;
     }
 
-    public function setNic(int $nic): void
+    public function setNic(string $nic): void
     {
         $this->nic = $nic;
     }
 
-    public function getName(): string
+    public function getSiret(): string
+    {
+        return $this->siret;
+    }
+
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): void
+    public function setName(?string $name): void
     {
         $this->name = $name;
     }

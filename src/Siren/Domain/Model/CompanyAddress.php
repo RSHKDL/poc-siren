@@ -8,61 +8,58 @@ namespace App\Siren\Domain\Model;
  */
 class CompanyAddress
 {
-    private string $streetAddress;
-    private $postalCode;
-    private string $addressLocality;
-    private string $addressRegion;
-    private string $addressCountry;
+    private ?string $streetAddress;
+    private ?string $postalCode;
+    private ?string $addressLocality;
+    private ?string $addressRegion;
+    private ?string $addressCountry;
 
-    public function getStreetAddress(): string
+    public function getStreetAddress(): ?string
     {
         return $this->streetAddress;
     }
 
-    public function setStreetAddress(string $streetAddress): void
+    public function setStreetAddress(?string $streetAddress): void
     {
         $this->streetAddress = $streetAddress;
     }
 
-    /**
-     * @return int|string|null
-     */
-    public function getPostalCode()
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }
 
-    public function setPostalCode($postalCode): void
+    public function setPostalCode(?string $postalCode): void
     {
         $this->postalCode = $postalCode;
     }
 
-    public function getAddressLocality(): string
+    public function getAddressLocality(): ?string
     {
         return $this->addressLocality;
     }
 
-    public function setAddressLocality(string $addressLocality): void
+    public function setAddressLocality(?string $addressLocality): void
     {
         $this->addressLocality = $addressLocality;
     }
 
-    public function getAddressRegion(): string
+    public function getAddressRegion(): ?string
     {
         return $this->addressRegion;
     }
 
-    public function setAddressRegion(string $addressRegion): void
+    public function setAddressRegion(?string $addressRegion): void
     {
         $this->addressRegion = $addressRegion;
     }
 
-    public function getAddressCountry(): string
+    public function getAddressCountry(): ?string
     {
         return $this->addressCountry;
     }
 
-    public function setAddressCountry(string $addressCountry): void
+    public function setAddressCountry(?string $addressCountry): void
     {
         $this->addressCountry = $addressCountry;
     }

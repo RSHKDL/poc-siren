@@ -24,10 +24,18 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Siren\Application\Query\FindCompanyQueryHandler:
+    App\Siren\Domain\Services\SirenFromCsvFinder:
         arguments:
             $path: '%data_csv_path%'
 
-    App\Siren\Domain\Services\GetCompanyInfoFromCsv:
+    App\Siren\Domain\Services\SirenFromApiFinder:
+        arguments:
+            $token: '%env(INSEE_API_TOKEN)%'
+
+    App\Siren\Domain\Services\CompanyInfoFromCsvGetter:
         arguments:
             $csvFile: '%data_csv_path%'
+
+    App\Siren\Domain\Services\CompanyInfoFromApiGetter:
+        arguments:
+            $token: '%env(INSEE_API_TOKEN)%'

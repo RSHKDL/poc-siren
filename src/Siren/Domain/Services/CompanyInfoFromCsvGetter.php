@@ -4,23 +4,23 @@ namespace App\Siren\Domain\Services;
 
 use App\Siren\Domain\Model\Company;
 use App\Siren\Domain\Model\CompanyAddress;
+use App\Siren\Domain\ValueObject\CompanyCsvResult;
+use App\Siren\Domain\ValueObject\CompanyResultInterface;
+use App\Siren\Domain\ValueObject\SirenResultInterface;
 
-final class GetCompanyInfoFromCsv
+final class CompanyInfoFromCsvGetter implements CompanyInfoGetterStrategy
 {
     private string $csvFile;
 
-    public function __construct(
-        string $csvFile
-    ) {
+    public function __construct(string $csvFile)
+    {
         $this->csvFile = $csvFile;
     }
 
     /**
-     * Parse a csv file and return an array of companies
-     *
-     * @return Company[]
+     * Parse a csv file and return a CompanyResultInterface
      */
-    public function getCompanyInfo(array $indexes): array
+    public function getCompanyInfo(SirenResultInterface $data): CompanyResultInterface
     {
         $file = fopen($this->csvFile, "r");
         $csvAsArray = [];
@@ -30,19 +30,17 @@ final class GetCompanyInfoFromCsv
         fclose($file);
 
         $companies = [];
-        foreach ($indexes as $index) {
+        foreach ($data->getIndexes() as $index) {
             $line = $csvAsArray[$index];
             $companies[] = $this->createCompanyFromCsvData($line);
         }
 
-        return $companies;
+        return new CompanyCsvResult($companies);
     }
 
     private function createCompanyFromCsvData(array $data): Company
     {
-        $company = new Company();
-        $company->setSiren($data[0]);
-        $company->setNic($data[1]);
+        $company = new Company($data[0], $data[1]);
         $company->setName($data[2]);
         $company->setBrand($data[36]);
         $company->setCategory(utf8_encode(trim($data[41])));

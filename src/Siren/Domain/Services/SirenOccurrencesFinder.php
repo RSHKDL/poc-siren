@@ -2,24 +2,19 @@
 
 namespace App\Siren\Domain\Services;
 
-use App\Siren\Domain\Exception\SirenNotFoundException;
-use App\Siren\Domain\ValueObject\SirenOccurrencesResult;
+use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
+use App\Siren\Domain\ValueObject\SirenCsvResult;
 
 final class SirenOccurrencesFinder
 {
-    /**
-     * Return SirenOccurrencesResult if occurrences are found or throw an exception.
-     *
-     * @throws SirenNotFoundException
-     */
-    public function findOccurrences(array $array, int $siren): SirenOccurrencesResult
+    public function findOccurrences(array $array, int $siren): SirenCsvResult
     {
-        $result = new SirenOccurrencesResult();
+        $result = new SirenCsvResult(SirenFinderStrategyEnum::BY_CSV);
         $size = count($array);
         $index = $this->binarySearch($array, 0, $size - 1, $siren);
 
         if ($index == -1) {
-            throw new SirenNotFoundException("No company found with siren: $siren");
+            $result->occurrencesCount = 0;
         } else {
             $indexes = [];
             $indexes[] = $index;

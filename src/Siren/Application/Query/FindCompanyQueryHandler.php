@@ -4,39 +4,44 @@ namespace App\Siren\Application\Query;
 
 use App\CQRS\Query;
 use App\CQRS\QueryHandler;
+use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
 use App\Siren\Domain\Exception\SirenNotFoundException;
-use App\Siren\Domain\Services\SirenOccurrencesFinder;
-use App\Siren\Domain\ValueObject\SirenOccurrencesResult;
+use App\Siren\Domain\Exception\UnknownFinderStrategyException;
+use App\Siren\Domain\Services\SirenFromApiFinder;
+use App\Siren\Domain\Services\SirenFromCsvFinder;
+use App\Siren\Domain\ValueObject\SirenResultInterface;
 
 class FindCompanyQueryHandler implements QueryHandler
 {
-    private string $path;
-    private SirenOccurrencesFinder $sirenOccurrencesFinder;
+    private SirenFromApiFinder $apiFinder;
+    private SirenFromCsvFinder $csvFinder;
 
     public function __construct(
-        string $path,
-        SirenOccurrencesFinder $sirenOccurrencesFinder
+        SirenFromApiFinder $apiFinder,
+        SirenFromCsvFinder $csvFinder
     ) {
-        $this->path = $path;
-        $this->sirenOccurrencesFinder = $sirenOccurrencesFinder;
+        $this->apiFinder = $apiFinder;
+        $this->csvFinder = $csvFinder;
     }
 
     /**
      * @param FindCompanyQuery $query
      * @throws SirenNotFoundException
      */
-    public function handle(Query $query): SirenOccurrencesResult
+    public function handle(Query $query): SirenResultInterface
     {
-        $data = [];
-        $file = fopen($this->path, "r");
-        while (($csv = fgetcsv($file, 2048, ";")) !== false) {
-            for ($column = 0; $column < 1; $column++) {
-                $data[] = $csv[$column];
-            }
+        switch ($query->mode) {
+            case SirenFinderStrategyEnum::BY_CSV:
+                $result = $this->csvFinder->find($query->siren);
+                break;
+            case SirenFinderStrategyEnum::BY_API:
+                $result = $this->apiFinder->find($query->siren);
+                break;
+            default:
+                throw new UnknownFinderStrategyException("{$query->mode} is not supported");
         }
-        fclose($file);
 
-        return $this->sirenOccurrencesFinder->findOccurrences($data, $query->siren);
+        return $result;
     }
 
 

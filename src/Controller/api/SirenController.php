@@ -37,7 +37,7 @@ class SirenController extends AbstractController
             $response = new JsonResponse($throwable->getMessage(), Response::HTTP_NOT_FOUND);
         } catch (SirenApiException $throwable) {
             $response = new JsonResponse(
-                "The insee Api returned an error: {$throwable->getMessage()}",
+                "The external Api returned an error: {$throwable->getMessage()}",
                 $throwable->getCode());
         } catch (\Throwable $throwable) {
             $response = new JsonResponse(

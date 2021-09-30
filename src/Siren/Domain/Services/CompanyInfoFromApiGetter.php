@@ -3,6 +3,7 @@
 namespace App\Siren\Domain\Services;
 
 use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
+use App\Siren\Domain\Exception\SirenApiException;
 use App\Siren\Domain\Model\Company;
 use App\Siren\Domain\Model\CompanyAddress;
 use App\Siren\Domain\ValueObject\CompanyApiResult;
@@ -28,6 +29,9 @@ final class CompanyInfoFromApiGetter implements CompanyInfoGetterStrategy
         return $mode === SirenFinderStrategyEnum::BY_API;
     }
 
+    /**
+     * @throws SirenApiException
+     */
     public function getCompanyInfo(SirenResultInterface $data): CompanyResultInterface
     {
         try {
@@ -37,14 +41,10 @@ final class CompanyInfoFromApiGetter implements CompanyInfoGetterStrategy
                 ['auth_bearer' => $this->token]
             );
             $company = $this->createCompanyFromApiData($response->toArray());
-            $result = new CompanyApiResult($company);
+            return new CompanyApiResult($company);
         } catch (\Throwable $throwable) {
-            //todo handle api response when errors
-            dd("todo", $throwable);
-            $result = new CompanyApiResult();
+            throw new SirenApiException($throwable->getMessage(), $throwable->getCode(), $throwable->getPrevious());
         }
-
-        return $result;
     }
 
     private function createCompanyFromApiData(array $data): Company

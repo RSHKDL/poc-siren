@@ -2,6 +2,7 @@
 
 namespace App\Siren\Domain\Services;
 
+use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
 use App\Siren\Domain\Model\Company;
 use App\Siren\Domain\Model\CompanyAddress;
 use App\Siren\Domain\ValueObject\CompanyCsvResult;
@@ -15,6 +16,11 @@ final class CompanyInfoFromCsvGetter implements CompanyInfoGetterStrategy
     public function __construct(string $csvFile)
     {
         $this->csvFile = $csvFile;
+    }
+
+    public function isEligible(string $mode): bool
+    {
+        return $mode === SirenFinderStrategyEnum::BY_CSV;
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Siren\Domain\Services;
 
+use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
 use App\Siren\Domain\Exception\SirenNotFoundException;
 use App\Siren\Domain\ValueObject\SirenResultInterface;
 
@@ -16,6 +17,11 @@ final class SirenFromCsvFinder implements SirenFinderStrategy
     ) {
         $this->path = $path;
         $this->occurrencesFinder = $occurrencesFinder;
+    }
+
+    public function isEligible(string $mode): bool
+    {
+        return $mode === SirenFinderStrategyEnum::BY_CSV;
     }
 
     /**

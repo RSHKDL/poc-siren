@@ -4,24 +4,17 @@ namespace App\Siren\Application\Command;
 
 use App\CQRS\Command;
 use App\CQRS\CommandHandler;
-use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
 use App\Siren\Domain\Exception\UnknownFinderStrategyException;
-use App\Siren\Domain\Services\CompanyInfoFromApiGetter;
-use App\Siren\Domain\Services\CompanyInfoFromCsvGetter;
+use App\Siren\Domain\Services\CompanyInfoGetterStrategy;
 use App\Siren\Domain\ValueObject\CompanyResultInterface;
-
 
 class GetCompanyInfoCommandHandler implements CommandHandler
 {
-    private CompanyInfoFromCsvGetter $fromCsv;
-    private CompanyInfoFromApiGetter $fromApi;
+    private iterable $strategies;
 
-    public function __construct(
-        CompanyInfoFromCsvGetter $fromCsv,
-        CompanyInfoFromApiGetter $fromApi
-    ) {
-        $this->fromCsv = $fromCsv;
-        $this->fromApi = $fromApi;
+    public function __construct(iterable $strategies)
+    {
+        $this->strategies = $strategies;
     }
 
     /**
@@ -29,18 +22,15 @@ class GetCompanyInfoCommandHandler implements CommandHandler
      */
     public function handle(Command $command): CompanyResultInterface
     {
-        $strategy = $command->result->getStrategy();
-        switch ($strategy) {
-            case SirenFinderStrategyEnum::BY_API:
-                $result = $this->fromApi->getCompanyInfo($command->result);
-                break;
-            case SirenFinderStrategyEnum::BY_CSV:
-                $result = $this->fromCsv->getCompanyInfo($command->result);
-                break;
-            default:
-                throw new UnknownFinderStrategyException("{$strategy} is not supported");
+        $mode = $command->result->getStrategy();
+
+        /** @var CompanyInfoGetterStrategy $strategy */
+        foreach ($this->strategies as $strategy) {
+            if ($strategy->isEligible($mode)) {
+                return $strategy->getCompanyInfo($command->result);
+            }
         }
 
-        return $result;
+        throw new UnknownFinderStrategyException("{$mode} is not supported");
     }
 }

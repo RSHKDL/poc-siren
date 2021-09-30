@@ -3,7 +3,7 @@
 namespace App\Siren\Domain\Services;
 
 use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
-use App\Siren\Domain\Exception\SirenNotFoundException;
+use App\Siren\Domain\Exception\SirenApiException;
 use App\Siren\Domain\ValueObject\SirenApiResult;
 use App\Siren\Domain\ValueObject\SirenResultInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -21,10 +21,15 @@ final class SirenFromApiFinder implements SirenFinderStrategy
         $this->httpClient = $httpClient;
     }
 
+    public function isEligible(string $mode): bool
+    {
+        return $mode === SirenFinderStrategyEnum::BY_API;
+    }
+
     /**
      * Return SirenResultInterface or throw an exception
      *
-     * @throws SirenNotFoundException
+     * @throws SirenApiException
      */
     public function find(string $siren): SirenResultInterface
     {
@@ -36,14 +41,10 @@ final class SirenFromApiFinder implements SirenFinderStrategy
             );
             $result = $this->formatSuccessResponse($response->toArray());
         } catch (\Throwable $throwable) {
-            $result = $this->formatErrorResponse($throwable);
+            throw new SirenApiException($throwable->getMessage(), $throwable->getCode(), $throwable->getPrevious());
         }
 
-        if ($result->isNotFound()) {
-            throw new SirenNotFoundException("No company found with siren: $siren");
-        } else {
-            return $result;
-        }
+        return $result;
     }
 
     private function formatSuccessResponse(array $data): SirenApiResult
@@ -52,15 +53,6 @@ final class SirenFromApiFinder implements SirenFinderStrategy
         $result->siren = $data["uniteLegale"]["siren"];
         $result->mostRecentNic = $data["uniteLegale"]["periodesUniteLegale"][0]["nicSiegeUniteLegale"];
         $result->periodsCount = count($data["uniteLegale"]["periodesUniteLegale"]);
-
-        return $result;
-    }
-
-    private function formatErrorResponse(\Throwable $throwable): SirenApiResult
-    {
-        $result = new SirenApiResult(SirenFinderStrategyEnum::BY_API);
-        $result->code = $throwable->getCode();
-        $result->message = $throwable->getMessage();
 
         return $result;
     }

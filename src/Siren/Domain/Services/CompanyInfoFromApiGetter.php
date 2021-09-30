@@ -2,6 +2,7 @@
 
 namespace App\Siren\Domain\Services;
 
+use App\Siren\Domain\Enum\SirenFinderStrategyEnum;
 use App\Siren\Domain\Model\Company;
 use App\Siren\Domain\Model\CompanyAddress;
 use App\Siren\Domain\ValueObject\CompanyApiResult;
@@ -20,6 +21,11 @@ final class CompanyInfoFromApiGetter implements CompanyInfoGetterStrategy
     ) {
         $this->token = $token;
         $this->httpClient = $httpClient;
+    }
+
+    public function isEligible(string $mode): bool
+    {
+        return $mode === SirenFinderStrategyEnum::BY_API;
     }
 
     public function getCompanyInfo(SirenResultInterface $data): CompanyResultInterface

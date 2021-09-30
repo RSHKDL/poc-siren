@@ -8,4 +8,5 @@ use App\Siren\Domain\ValueObject\SirenResultInterface;
 interface CompanyInfoGetterStrategy
 {
     public function getCompanyInfo(SirenResultInterface $data): CompanyResultInterface;
+    public function isEligible(string $mode): bool;
 }

@@ -39,3 +39,18 @@ services:
     App\Siren\Domain\Services\CompanyInfoFromApiGetter:
         arguments:
             $token: '%env(INSEE_API_TOKEN)%'
+
+    App\Siren\Application\Query\FindCompanyQueryHandler:
+        arguments:
+            $strategies: !tagged siren.strategy.siren_finder
+
+    App\Siren\Application\Command\GetCompanyInfoCommandHandler:
+        arguments:
+            $strategies: !tagged siren.strategy.company_info
+
+    _instanceof:
+        App\Siren\Domain\Services\SirenFinderStrategy:
+            tags: ['siren.strategy.siren_finder']
+
+        App\Siren\Domain\Services\CompanyInfoGetterStrategy:
+            tags: ['siren.strategy.company_info']
